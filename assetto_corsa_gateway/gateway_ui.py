@@ -9,14 +9,14 @@ from enum import Enum
 from PyQt5.QtCore import QThread, pyqtSignal
 
 
-mainwindow_ui_file = path = Path(__file__).parent / 'mainwindow.ui'
+mainwindow_ui_file = path = Path(__file__).parent / "mainwindow.ui"
 Ui_MainWindow, QtBaseClass = uic.loadUiType(mainwindow_ui_file)
 
 
 def show_error(message):
     error_dialog = QtWidgets.QErrorMessage()
-    error_dialog.setWindowTitle('Error')
-    error_dialog.showMessage('Error: {}'.format(message))
+    error_dialog.setWindowTitle("Error")
+    error_dialog.showMessage("Error: {}".format(message))
     error_dialog.exec()
 
 
@@ -41,12 +41,12 @@ class GatewayMainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def validate_input(self):
         if not validate_address(self.assetto_corsa_address_line_edit.text()):
-            show_error('AssettoCorsa address \'{}\' has invalid format.'.format(
+            show_error("AssettoCorsa address \"{}\" has invalid format.".format(
                 self.assetto_corsa_address_line_edit.text()))
             return False
 
         if not validate_address(self.open_dashboard_address_line_edit.text()):
-            show_error('OpenDashboard address \'{}\' has invalid format.'.format(
+            show_error("OpenDashboard address \"{}\" has invalid format.".format(
                 self.open_dashboard_address_line_edit.text()))
             return False
 
@@ -62,7 +62,7 @@ class GatewayMainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def handle_timeout(self):
         self.gateway_thread = None
-        show_error('Unable to receive packets from AssettoCorsa')
+        show_error("Unable to receive packets from AssettoCorsa")
         self.set_inputs_enabled(True)
 
     def handle_data_received(self, data_string: str):
@@ -109,20 +109,20 @@ class GatewayMainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 class GatewayThread(QThread):
 
     timeout_received = pyqtSignal()
-    data_received = pyqtSignal(str, name='data_string')
-    gateway_state = pyqtSignal(GatewayState, name='gateway_state')
+    data_received = pyqtSignal(str, name="data_string")
+    gateway_state = pyqtSignal(GatewayState, name="gateway_state")
 
     def __init__(self, assetto_corsa_connection, open_dashboard_connection):
         QtCore.QThread.__init__(self)
         self.assetto_corsa_connection = assetto_corsa_connection
         self.open_dashboard_connection = open_dashboard_connection
-        print('GatewayThread created: {}:{} -> {}:{}'.format(
+        print("GatewayThread created: {}:{} -> {}:{}".format(
             assetto_corsa_connection[0], assetto_corsa_connection[1],
             open_dashboard_connection[0], open_dashboard_connection[1]
         ))
 
     def __del__(self):
-        print('GatewayThread destroyed')
+        print("GatewayThread destroyed")
 
     def run(self):
         while not self.isInterruptionRequested():
