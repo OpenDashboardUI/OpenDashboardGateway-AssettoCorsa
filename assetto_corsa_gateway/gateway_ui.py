@@ -130,9 +130,9 @@ class GatewayThread(QThread):
                 self.gateway_state.emit(GatewayState.CONNECTING)
                 gateway = Gateway(self.assetto_corsa_connection, self.open_dashboard_connection)
                 gateway.init()
-                while True:
+                self.gateway_state.emit(GatewayState.CONNECTED)
+                while not self.isInterruptionRequested():
                     gateway.forward_packet()
-                    self.gateway_state.emit(GatewayState.CONNECTED)
                     self.data_received.emit(gateway.data_string)
             except Gateway.TimeoutException as e:
                 pass
